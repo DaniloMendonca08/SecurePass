@@ -32,8 +32,8 @@ public class User {
 
     // Utilizando um regexp para garantir que a senha fornecida seja mais segura, contendo letra, número e caractere especial
     @Pattern(
-            regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "A senha deve conter pelo menos uma letra maiúscula, um número e um caractere especial"
+            regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
+            message = "A senha deve conter pelo menos 8 caracteres, dentre eles uma letra maiúscula, uma letra minúscula, um número e um caractere especial."
     )
     String password;
 
