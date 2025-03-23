@@ -3,6 +3,8 @@ package br.com.danilo.securepass.user;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -21,11 +23,11 @@ public class UserService {
     }
 
     public boolean delete(Long id) {
-        try {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
             userRepository.deleteById(id);
             return true;
-        } catch (Exception e) {
-            return false;
         }
+        return false;
     }
 }
