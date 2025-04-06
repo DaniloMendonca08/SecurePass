@@ -4,6 +4,7 @@ import br.com.danilo.securepass.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -39,5 +40,21 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ApiResponse("Usuário não foi encontrado para exclusão."));
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<User> getInfo(@AuthenticationPrincipal String username) {
+        User user = userService.getUserInfo(username);
+
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<User> update(@Valid @RequestBody UpdateUserDTO UpdateUserDTO, @AuthenticationPrincipal String username) {
+        System.out.println("Entrou no metodo");
+        var UpdatedUser = userService.update(UpdateUserDTO,username);
+
+        return ResponseEntity.ok(UpdatedUser);
+
     }
 }
