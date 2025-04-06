@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 // É usada para indicar que a classe terá configurações e definição de beans
 // para a aplicação
@@ -17,14 +18,21 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain config(HttpSecurity http) throws Exception {
+    public SecurityFilterChain config(HttpSecurity http, AuthorizationFilter authorizationFilter, UnauthorizedEntryPoint unauthorizedEntryPoint) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(auth ->
                 auth
                         .requestMatchers(HttpMethod.POST, "/user").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .anyRequest().authenticated()
-
         );
+
+        //Para requisições onde o usuário precisa estar autenticado, receberá uma mensagem
+        //informando-o sobre o erro.
+        http.exceptionHandling(
+                ex -> ex.authenticationEntryPoint(unauthorizedEntryPoint));
+
+        http.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
