@@ -1,5 +1,6 @@
 package br.com.danilo.securepass.user;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,21 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    public User getUserInfo(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não foi encontrado na base de dados!"));
+    }
+
+    public User update(UpdateUserDTO updateUserDTO, String username) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não foi encontrado na base de dados!"));
+
+        user.setName(updateUserDTO.getName());
+        user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
+
+        return userRepository.save(user);
+
     }
 }
