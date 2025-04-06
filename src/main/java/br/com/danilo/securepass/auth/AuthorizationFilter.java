@@ -27,7 +27,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var header = request.getHeader("Authorization");
 
-        if (header == null || header.isBlank()) {
+        if (header == null) {
 
             //passando para o próximo filtro caso o usuário não passe o header, ex: requisição POST para criar conta
             filterChain.doFilter(request, response);
@@ -45,15 +45,27 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
+        //pegando o token do header e removendo a parte do Bearer
+        var token = header.replace("Bearer ", "").trim();
+
+        if (header.isBlank()) {
+            response.setStatus(401);
+            response.addHeader("Content-Type", "application/json");
+            response.getWriter().write("""
+                 {
+                    "message": "Token não pode estar vazio."
+                 }
+            """);
+            return;
+        }
+
         try {
-            //pegando o token do header e removendo a parte do Bearer
-            var token = header.replace("Bearer ", "");
 
             User user = tokenService.getUserFromToken(token);
 
             //autorizar o usuário
             var auth = new UsernamePasswordAuthenticationToken(
-                    user.getName(),
+                    user.getUsername(),
                     user.getPassword(),
                     List.of(new SimpleGrantedAuthority("USER"))
             );
@@ -67,7 +79,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             response.addHeader("Content-Type", "application/json");
             response.getWriter().write("""
                  {
-                     "message": "%se.getMessage()"
+                     "message": "%s"
                  }
              """.formatted(e.getMessage()));
         }
