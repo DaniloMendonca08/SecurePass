@@ -45,7 +45,7 @@ public class TokenService {
                 .verify(token)
                 .getSubject();
 
-        return userRepository.findByUsername(username)
+        User userFound = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não foi encontrado."));
     }
 }
