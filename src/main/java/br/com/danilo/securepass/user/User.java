@@ -2,7 +2,9 @@ package br.com.danilo.securepass.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 // Utilizando esse nome de tabela para evitar conflitos com o banco de dados
 @Table(name = "users")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -24,6 +28,7 @@ public class User {
     @NotBlank(message = "O nome não deve ser nulo e nem conter espaços em branco.")
     String name;
 
+    @Column(unique = true, nullable = false)
     @NotBlank(message = "O nome de usuário não pode ser nulo e também não pode conter espaços em branco.")
     String username;
 
