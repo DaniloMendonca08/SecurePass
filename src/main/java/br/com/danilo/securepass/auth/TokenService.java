@@ -32,7 +32,10 @@ public class TokenService {
                 .withExpiresAt(expiresAt)
                 .sign(algorithm);
 
-        return new Token(token);
+        Token createdToken = new Token(token);
+
+        log.debug("Token gerado com sucesso.");
+        return createdToken;
     }
 
     public User getUserFromToken(String token) {
