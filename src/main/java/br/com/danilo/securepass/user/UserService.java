@@ -48,7 +48,7 @@ public class UserService {
         user.setName(updateUserDTO.getName());
         user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
 
-        return userRepository.save(user);
+        User updatedUser = userRepository.save(user);
 
     }
 }
