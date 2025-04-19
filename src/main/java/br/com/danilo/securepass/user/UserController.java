@@ -51,7 +51,6 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<User> update(@Valid @RequestBody UpdateUserDTO UpdateUserDTO, @AuthenticationPrincipal String username) {
-        System.out.println("Entrou no metodo");
         var UpdatedUser = userService.update(UpdateUserDTO,username);
 
         return ResponseEntity.ok(UpdatedUser);
