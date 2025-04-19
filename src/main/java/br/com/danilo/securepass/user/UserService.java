@@ -20,7 +20,11 @@ public class UserService {
 
     public User create(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+
+        User createdUser = userRepository.save(user);
+
+        log.info("Usuário registrado com sucesso.");
+        return createdUser;
     }
 
     public boolean delete(Long id) {
