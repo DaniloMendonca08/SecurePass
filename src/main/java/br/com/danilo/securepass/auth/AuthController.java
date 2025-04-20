@@ -1,6 +1,7 @@
 package br.com.danilo.securepass.auth;
 
 import br.com.danilo.securepass.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 public class AuthController {
 
@@ -23,6 +25,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public Token login(@RequestBody Credentials credentials) {
+        log.debug("Realizando login do usuário...");
 
         var user = userRepository.findByUsername(credentials.username())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não foi possível ser encontrado."));

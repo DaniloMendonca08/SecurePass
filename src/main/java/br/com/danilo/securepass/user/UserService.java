@@ -1,11 +1,13 @@
 package br.com.danilo.securepass.user;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -19,6 +21,7 @@ public class UserService {
     }
 
     public User create(User user) {
+        log.info("Registrando novo usuário...");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User createdUser = userRepository.save(user);
@@ -31,12 +34,15 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             userRepository.deleteById(id);
+            log.info("Usuário deletado com sucesso.");
             return true;
         }
+        log.warn("Não foi possível excluir este usuário.");
         return false;
     }
 
     public User getUserInfo(String username) {
+        log.debug("Buscando informações do usuário...");
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não foi encontrado na base de dados!"));
     }
@@ -50,5 +56,7 @@ public class UserService {
 
         User updatedUser = userRepository.save(user);
 
+        log.info("Usuário atualizado com sucesso.");
+        return updatedUser;
     }
 }

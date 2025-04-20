@@ -4,6 +4,7 @@ import br.com.danilo.securepass.user.User;
 import br.com.danilo.securepass.user.UserRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+@Slf4j
 @Service
 public class TokenService {
 
@@ -23,6 +25,7 @@ public class TokenService {
     }
 
     public Token create(User user) {
+        log.info("Gerando token para o usuário...");
 
         var expiresAt = LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.ofHours(-3));
         String token = JWT.create()
@@ -39,6 +42,7 @@ public class TokenService {
     }
 
     public User getUserFromToken(String token) {
+        log.info("Extraindo usuário do token...");
         var username = JWT.require(algorithm)
                 .withIssuer("SecurePass")
                 .build()
@@ -47,5 +51,8 @@ public class TokenService {
 
         User userFound = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não foi encontrado."));
+
+        log.debug("Username extraído do token com sucesso.");
+        return userFound;
     }
 }

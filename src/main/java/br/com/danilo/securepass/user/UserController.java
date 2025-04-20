@@ -2,12 +2,14 @@ package br.com.danilo.securepass.user;
 
 import br.com.danilo.securepass.response.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -20,6 +22,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> create(@Valid @RequestBody User user, UriComponentsBuilder uriBuilder) {
+        log.info("Requisição recebida para criar um novo usuário.");
+
         User createdUser = userService.create(user);
 
         var uri = uriBuilder
@@ -35,6 +39,8 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> delete(@PathVariable Long id) {
+        log.info("Requisição recebida para deletar um usuário baseado em seu ID.");
+
         if (userService.delete(id)) {
             return ResponseEntity.ok(new ApiResponse("Usuário excluido com sucesso."));
         }
@@ -44,16 +50,20 @@ public class UserController {
 
     @GetMapping("/info")
     public ResponseEntity<User> getInfo(@AuthenticationPrincipal String username) {
+        log.debug("Requisição recebida para buscar as informações do usuário logado.");
+
         User user = userService.getUserInfo(username);
 
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<User> update(@Valid @RequestBody UpdateUserDTO UpdateUserDTO, @AuthenticationPrincipal String username) {
-        var UpdatedUser = userService.update(UpdateUserDTO,username);
+    public ResponseEntity<User> update(@Valid @RequestBody UpdateUserDTO updateUserDTO, @AuthenticationPrincipal String username) {
+        log.debug("Requisição recebida para atualizar os dados do usuário.");
 
-        return ResponseEntity.ok(UpdatedUser);
+        var updatedUser = userService.update(updateUserDTO,username);
+
+        return ResponseEntity.ok(updatedUser);
 
     }
 }
