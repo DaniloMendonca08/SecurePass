@@ -1,0 +1,34 @@
+services:
+  app:
+    build: .
+    container_name: SecurePassAppJava
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/securepass
+      SPRING_DATASOURCE_USERNAME: teste_sp
+      SPRING_DATASOURCE_PASSWORD: testesppwd
+    networks:
+      - private-network
+
+  db:
+    image: postgres:17
+    container_name: SecurePassDB
+    environment:
+      POSTGRES_DB: securepass
+      POSTGRES_USER: teste_sp
+      POSTGRES_PASSWORD: testesppwd
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - private-network
+volumes:
+  pgdata:
+
+networks:
+  private-network:
