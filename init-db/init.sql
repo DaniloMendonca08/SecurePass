@@ -1,0 +1,14 @@
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    birth_date DATE NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE SEQUENCE user_sequence
+    START 1
+    INCREMENT 1;
+
+ALTER TABLE users ALTER COLUMN id SET DEFAULT nextval('user_sequence');
