@@ -1,7 +1,11 @@
 package br.com.danilo.securepass.auth;
 
+import br.com.danilo.securepass.response.ApiResponse;
 import br.com.danilo.securepass.user.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -30,6 +34,13 @@ public class AuthController {
         summary = "Realiza login do usuário",
         description = "Realiza login do usuário e retorna um token de acesso em caso de sucesso."
     )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Login realizado com sucesso."),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Usuário ou senha está incorreto.",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
+    })
     @PostMapping("/login")
     public Token login(@RequestBody Credentials credentials) {
         log.debug("Realizando login do usuário...");
