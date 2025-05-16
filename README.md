@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DaniloMendonca08_SecurePass&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DaniloMendonca08_SecurePass)
+
 # :computer: SecurePass
 
 API RESTful para CRUD de usuários e autenticação, desenvolvida utilizando Java e Spring Boot, seguindo boas práticas de desenvolvimento.
